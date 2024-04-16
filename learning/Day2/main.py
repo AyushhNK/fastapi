@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from enum import Enum
+from typing import Optional
 
 app=FastAPI()
 
@@ -28,3 +29,17 @@ async def get_food(food_name:FoodEnum):
 	elif food_name=='fruits':
 		return {"food_name":food_name,"message":"you are eating healthy vegetables"}
 	return {"food_name":food_name,"message":"you are eating healthy dairy"}
+
+
+fake_db=[{"items":"foo"},{"items":"bar"},{"items":"nam"}]
+
+@app.get('/items')
+async def list_items(skip:int=0,limit:int=5):
+	return  fake_db[skip:skip+limit]
+
+
+@app.get('/items/{items_id}')
+async def get_items(items_id,q:str|None=None):
+	if q:
+		return {"items_id":items_id,"q":q}
+	return {"items_id":items_id}
